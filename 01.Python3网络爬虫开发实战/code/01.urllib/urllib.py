@@ -1,5 +1,6 @@
 import urllib.request
 import urllib.parse
+import urllib.error
 import socket
 import http.cookiejar
 
@@ -104,3 +105,72 @@ import http.cookiejar
 # opener = urllib.request.build_opener(handler)
 # response = opener.open('http://www.baidu.com')
 # print(response.read().decode('utf-8'))
+
+# demo15 -- 异常处理,普通处理
+# try:
+#     response = urllib.request.urlopen("http://cuiqingcai.com/index.html")
+# except urllib.error.URLError as e:
+#     print(e.reason)
+
+# demo16 -- 异常处理，多异常处理，一般是先小error，再到大error
+# try:
+#     response = urllib.request.urlopen("http://cuiqingcai.com/index.html")
+# except urllib.error.HTTPError as e:
+#     print(e.reason, e.code, e.headers, sep='\n')
+# except urllib.error.URLError as e:
+#     print(e.reason)
+# else:
+#     print('Request Successfully')
+
+# demo16 -- 异常处理，多异常处理，一般是先小error，再到大error
+# try:
+#     response = urllib.request.urlopen('https://www.baidu.com', timeout=0.01)
+# except urllib.error.URLError as e:
+#     print(type(e.reason))
+#     if (isinstance(e.reason, socket.timeout)):
+#         print('时间超时')
+
+# URL解析 urllib.parse.urlparse
+# demo17 -- 简单地址解析
+# ParseResult(scheme='http', netloc='www.baidu.com', path='/index.html', params='user', query='id=5', fragment='comment')
+# result = urllib.parse.urlparse('http://www.baidu.com/index.html;user?id=5#comment')
+# print(type(result), result)
+
+# demo18 -- 地址协议添加，如果url不包含协议，那么参数scheme的内容会为url添加上去，否则url包含内容的话，则不会生效
+# result = urllib.parse.urlparse('www.baidu.com/index.html;user?id=5#comment', scheme='https')
+# print(type(result), result)
+#
+# result = urllib.parse.urlparse('http://www.baidu.com/index.html;user?id=5#comment', scheme='https')
+# print(type(result), result)
+
+# demo19 -- allow_fragments 是否拆分fragment的内容 false为不拆分,即fragment的内容为空
+# query='id=5#comment
+# result = urllib.parse.urlparse('http://www.baidu.com/index.html;user?id=5#comment', allow_fragments=False)
+# print(type(result), result)
+
+# path='/index.html#comment'
+# result = urllib.parse.urlparse('http://www.baidu.com/index.html#comment', allow_fragments=False)
+# print(type(result), result)
+
+# demo20 -- 使用urlunparse合并地址(但还是一般合并地址还是使用urljoin比较好)
+# data = ('http', 'www.baidu.com', 'index.html', 'user', 'a=16', 'comment')
+# print(urllib.parse.urlunparse(data))
+
+# demo21 -- urljoin 后面的元素会替代前面部分的内容，我想，应该该是每个地址使用urlparse分成六个部分，然后进行后面内容的替换
+# print(urllib.parse.urljoin('http://www.baidu.com', 'FAQ.html'))
+# print(urllib.parse.urljoin('http://www.baidu.com', 'https://goular.com/FAQ.html'))
+# print(urllib.parse.urljoin('http://www.baidu.com/about.html', 'https://goular.com/FAQ.html'))
+# print(urllib.parse.urljoin('http://www.baidu.com/about.html', 'https://goular.com/FAQ.html?question=123456'))
+# print(urllib.parse.urljoin('http://www.baidu.com?wd=abc', 'https://goular.com/index.php'))
+# print(urllib.parse.urljoin('http://www.baidu.com?wd=ccd', '?category=2#comment'))
+# print(urllib.parse.urljoin('www.baidu.com', '?category=2#comment'))
+# print(urllib.parse.urljoin('www.baidu.com#comment', '?category=2'))
+
+# demo22 -- urlencode 将字典转为GET请求参数的字符串
+dict = {
+    'name': 'Germey',
+    'age': 22
+}
+base_url = 'http://www.baidu.com?'
+url = base_url + urllib.parse.urlencode(dict)
+print(url)
