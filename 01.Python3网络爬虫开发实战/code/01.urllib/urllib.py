@@ -1,6 +1,7 @@
 import urllib.request
 import urllib.parse
 import urllib.error
+import urllib.robotparser
 import socket
 import http.cookiejar
 
@@ -167,10 +168,20 @@ import http.cookiejar
 # print(urllib.parse.urljoin('www.baidu.com#comment', '?category=2'))
 
 # demo22 -- urlencode 将字典转为GET请求参数的字符串
-dict = {
-    'name': 'Germey',
-    'age': 22
-}
-base_url = 'http://www.baidu.com?'
-url = base_url + urllib.parse.urlencode(dict)
-print(url)
+# dict = {
+#     'name': 'Germey',
+#     'age': 22
+# }
+# base_url = 'http://www.baidu.com?'
+# url = base_url + urllib.parse.urlencode(dict)
+# print(url)
+
+# demo23 -- robotparser 即解析robot.txt的文件的处理,这个用的很少
+rp = urllib.robotparser.RobotFileParser()
+rp.set_url("http://example.webscraping.com/robots.txt")
+rp.read()
+url = "http://example.webscraping.com/"
+user_agent = 'BadCrawler'
+print(rp.can_fetch(user_agent, url))  # 检查是否能够访问,BadCrawler被限制不能访问
+user_agent = 'GoodCrawler'
+print(rp.can_fetch(user_agent, url))  # 检查是否能够访问,GoodCrawler被限制不能访问
